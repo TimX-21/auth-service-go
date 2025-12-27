@@ -20,7 +20,7 @@ func NewAuthHandler(s service.AuthServiceItf) *AuthHandler {
 }
 
 func (h *AuthHandler) GetUserDataHandler(c *gin.Context) {
-	
+
 	request := dto.GetUserDataRequest{}
 	if err := c.ShouldBindJSON(&request); err != nil {
 		c.Error(apperror.ErrInvalidRequest)
@@ -30,14 +30,14 @@ func (h *AuthHandler) GetUserDataHandler(c *gin.Context) {
 		c.Error(apperror.ErrInvalidRequest)
 		return
 	}
-	
+
 	user := model.User{Email: request.Email}
 	userData, err := h.service.GetUserDataService(c, user)
 	if err != nil {
 		c.Error(err)
 		return
 	}
-	
+
 	response := dto.GetUserDataResponse{
 		ID:        userData.ID,
 		Email:     userData.Email,
@@ -48,3 +48,35 @@ func (h *AuthHandler) GetUserDataHandler(c *gin.Context) {
 
 	util.HandleResponse(response, http.StatusOK, c)
 }
+
+func (h *AuthHandler) LoginHandler(c *gin.Context) {
+	request := dto.LoginRequest{}
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.Error(apperror.ErrInvalidRequest)
+		return
+	}
+
+	if err := util.ValidateStruct(request); err != nil {
+		c.Error(apperror.ErrInvalidRequest)
+		return
+	}
+
+	RequestedUser := model.User{
+		Email:    request.Email,
+		Password: request.Password,
+	}
+
+	loginResponse, err := h.service.LoginService(c, RequestedUser)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	res := dto.LoginResponse{
+		AccessToken: loginResponse,
+	}
+
+	util.HandleResponse(res, http.StatusOK, c)
+}
+
+

@@ -21,6 +21,10 @@ var (
 	ErrInvalidRequest = BadRequestError("Invalid Request")
 	ErrRecordNotFound = NotFoundError("Record Not Found")
 	ErrUnauthorized   = UnauthorizedError("Unauthorized")
+	ErrUserNotFound   = NotFoundError("User Not Found")
+	ErrInternalServer = InternalServerError("Internal Server Error")
+	ErrTimeout        = TimeoutError("Request Timeout")
+	ErrCanceled       = CanceledError("Request Canceled")
 )
 
 func TimeoutError(errMsg string) *gin.Error {

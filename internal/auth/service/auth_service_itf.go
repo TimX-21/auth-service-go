@@ -8,4 +8,5 @@ import (
 
 type AuthServiceItf interface {
 	GetUserDataService(ctx context.Context, user model.User) (*model.User, error)
+	LoginService(ctx context.Context, user model.User) (string, error)
 }

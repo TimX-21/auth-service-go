@@ -3,6 +3,7 @@ package route
 import (
     "github.com/TimX-21/auth-service-go/internal/auth/handler"
     "github.com/TimX-21/auth-service-go/internal/middleware"
+    
     "github.com/gin-gonic/gin"
 )
 
@@ -23,7 +24,9 @@ func Setup(c *RouteConfig) *gin.Engine {
     s.ContextWithFallback = true
 
     s.Use(gin.Recovery())
+    s.Use(middleware.ErrorCustomRecoveryMiddleware())
     s.Use(middleware.LoggerMiddleware())
+    s.Use(middleware.GeneralErrorMiddleware())
 
     api := s.Group("/api/v1")
     SetupAuthRoutes(api, c)
@@ -33,4 +36,5 @@ func Setup(c *RouteConfig) *gin.Engine {
 func SetupAuthRoutes(s *gin.RouterGroup, c *RouteConfig) {
 	auth := s.Group("/auth")
 	auth.GET("/", c.AuthHandler.GetUserDataHandler)
+    auth.POST("/login", c.AuthHandler.LoginHandler)
 }
