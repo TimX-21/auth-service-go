@@ -57,3 +57,31 @@ func (s *AuthService) LoginService(ctx context.Context, user model.User) (string
 
 	return token, nil
 }
+
+func (s *AuthService) RegisterService(ctx context.Context, user model.User) error {
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return apperror.ErrInternalServer
+	}
+
+	user.Password = string(hashedPassword)
+
+	err = s.txManager.Do(ctx, func(txContext context.Context) error{
+
+		err = s.authRepository.CreateUser(txContext, user)
+		if err != nil {
+			return err
+		}
+
+		return nil
+		
+	})
+
+	if err != nil {
+		return err
+	}
+
+
+	return nil
+}

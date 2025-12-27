@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 
+	"github.com/TimX-21/auth-service-go/internal/apperror"
 	"github.com/TimX-21/auth-service-go/internal/auth/model"
 )
 
@@ -39,8 +40,26 @@ func (r *AuthRepository) GetUserByEmail(ctx context.Context, user model.User) (*
 		&user.DeletedAt,
 	)
 	if err != nil {
-		return nil, err
+		return nil, apperror.ErrDatabase
 	}
 
 	return &user, nil
+}
+
+func (r *AuthRepository) CreateUser(ctx context.Context, user model.User) error {
+	conn := r.getExecutor(ctx)
+
+	query := "INSERT INTO users (username, email, password, is_verified, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW())"
+
+	_, err := conn.ExecContext(ctx, query,
+		user.Username,
+		user.Email,
+		user.Password,
+		user.IsActive,
+	)
+	if err != nil {
+		return apperror.ErrDatabase
+	}
+
+	return nil
 }

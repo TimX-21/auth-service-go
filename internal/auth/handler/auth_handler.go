@@ -79,4 +79,31 @@ func (h *AuthHandler) LoginHandler(c *gin.Context) {
 	util.HandleResponse(res, http.StatusOK, c)
 }
 
+func (h *AuthHandler) RegisterHandler(c *gin.Context) {
+	request := dto.RegisterRequest{}
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.Error(apperror.ErrInvalidRequest)
+		return
+	}
+	
+	if err := util.ValidateStruct(request); err != nil {
+		c.Error(apperror.ErrInvalidRequest)
+		return
+	}
 
+	NewUser := model.User{
+		Username: request.Username,
+		Email:    request.Email,
+		Password: request.Password,
+	}
+
+	err := h.service.RegisterService(c, NewUser)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	res := dto.RegisterResponse{}
+
+	util.HandleResponse(res, http.StatusCreated, c)
+}

@@ -8,4 +8,5 @@ import (
 
 type AuthRepositoryItf interface {
 	GetUserByEmail(ctx context.Context, user model.User) (*model.User, error)
+	CreateUser(ctx context.Context, user model.User) error
 }

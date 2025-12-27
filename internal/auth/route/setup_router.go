@@ -37,4 +37,5 @@ func SetupAuthRoutes(s *gin.RouterGroup, c *RouteConfig) {
 	auth := s.Group("/auth")
 	auth.GET("/", c.AuthHandler.GetUserDataHandler)
     auth.POST("/login", c.AuthHandler.LoginHandler)
+    auth.POST("/register", c.AuthHandler.RegisterHandler)
 }
