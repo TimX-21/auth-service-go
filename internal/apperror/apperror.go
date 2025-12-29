@@ -25,6 +25,11 @@ var (
 	ErrInternalServer = InternalServerError("Internal Server Error")
 	ErrTimeout        = TimeoutError("Request Timeout")
 	ErrCanceled       = CanceledError("Request Canceled")
+
+	ErrTooManyRequests = BadRequestError("Too Many Requests")
+	ErrInvalidOTP = BadRequestError("Invalid OTP")
+	ErrInvalidResetToken = BadRequestError("Invalid Reset Token")
+	ErrPasswordNotMatch = BadRequestError("Password doesn't match")
 )
 
 func TimeoutError(errMsg string) *gin.Error {

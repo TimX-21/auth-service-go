@@ -10,4 +10,7 @@ type AuthServiceItf interface {
 	GetUserDataService(ctx context.Context, user model.User) (*model.User, error)
 	LoginService(ctx context.Context, user model.User) (string, error)
 	RegisterService(ctx context.Context, user model.User) error
+	ForgotPasswordRequestService(ctx context.Context, user model.User) error
+	VerifyResetOTPService(ctx context.Context, userInput model.User, otpInput model.PasswordResetOTP) (string, error)
+	ResetPasswordService(ctx context.Context, tokenInput model.PasswordResetToken, userInput model.User) error
 }

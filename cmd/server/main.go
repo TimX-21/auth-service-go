@@ -8,6 +8,7 @@ import (
 	"github.com/TimX-21/auth-service-go/internal/auth/route"
 	"github.com/TimX-21/auth-service-go/internal/auth/service"
 	"github.com/TimX-21/auth-service-go/internal/config"
+	"github.com/TimX-21/auth-service-go/internal/util"
 	"github.com/TimX-21/auth-service-go/pkg"
 )
 
@@ -30,9 +31,11 @@ func main() {
 	config.RunMigrations(db)
 
 	txManager := repository.NewTransactionManager(db)
+	cfg := config.LoadResetConfig()
+	emailSender := util.NewDummyEmailSender()
 
 	authR := repository.NewAuthRepository(db)
-	authS := service.NewAuthService(authR, txManager)
+	authS := service.NewAuthService(authR, txManager, cfg, emailSender)
 	authH := handler.NewAuthHandler(authS)
 
 	routeConfig := route.NewRouteConfig(

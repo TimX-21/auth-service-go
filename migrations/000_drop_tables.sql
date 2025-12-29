@@ -1,1 +1,3 @@
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS password_reset_otps CASCADE;
+DROP TABLE IF EXISTS password_reset_tokens CASCADE;
